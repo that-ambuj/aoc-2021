@@ -1,26 +1,40 @@
 fn main() {
     let input = include_str!("../../inputs/day3.txt");
 
-    let values: Vec<Vec<u32>> = input
+    let values: Vec<Vec<_>> = input
         .lines()
-        .map(|line| line.chars().filter_map(|c| c.to_digit(2)).collect())
+        .map(|line| line.chars().map(|c| c.to_digit(2).unwrap()).collect())
         .collect();
 
-    let o2_values = filter_values(values.clone(), |digit, most_common| digit == most_common);
-    let co2_values = filter_values(values, |digit, most_common| digit != most_common);
+    let width = values[0].len();
+    let size = 16;
 
-    let o2_value = o2_values[0].iter().fold(0, |acc, val| (acc << 1) + val);
-    let co2_value = co2_values[0].iter().fold(0, |acc, val| (acc << 1) + val);
+    let gamma = part1(&values);
+    println!("{:b}", gamma);
 
+    let padding = size - width;
+    let epsilon = !gamma << padding >> padding;
+
+    let power_consumption = gamma as usize * epsilon as usize;
+
+    dbg!(power_consumption);
+
+    let o2_value = part2(&values, |digit, most_common| digit == most_common);
+    let co2_value = part2(&values, |digit, most_common| digit != most_common);
+
+    println!("o2: {:?}, co2: {:?}", o2_value, co2_value);
     dbg!(o2_value * co2_value);
 }
 
-fn filter_values(values: Vec<Vec<u32>>, filter_fn: fn(u32, u32) -> bool) -> Vec<Vec<u32>> {
+fn vec_to_int(slice: &[u32]) -> u32 {
+    slice.into_iter().fold(0, |acc, val| (acc << 1) + val)
+}
+
+fn part1(values: &[Vec<u32>]) -> u16 {
     let width = values[0].len();
     let half = values.len() / 2;
 
-    let mut gamma: u16 = 0;
-    let mut filtered_values = values.clone();
+    let mut gamma = 0u16;
 
     for col in 0..width {
         let column_values: Vec<u32> = values
@@ -31,31 +45,37 @@ fn filter_values(values: Vec<Vec<u32>>, filter_fn: fn(u32, u32) -> bool) -> Vec<
         // Sum is alias for occurences of `1` in the column
         let sum = column_values.iter().sum::<u32>();
         // Is `1` if there are more occurences of `1` than `0`
-        let most_common = (sum as usize > half) as u32;
+        let most_common = (sum as usize > half) as u16;
 
-        if filtered_values.len() != 1 {
-            filtered_values = filtered_values
-                .into_iter()
-                .filter(|value| filter_fn(value[col], most_common))
-                .collect();
-        }
-
-        gamma = (gamma << 1) + most_common as u16
+        gamma = (gamma << 1) + most_common;
     }
 
-    // 16 is the size of integer for gamma
-    let padding_left = 16 - width;
+    gamma
+}
 
-    // This does a bitwise `NOT` on gamma and replaces the left `1`s with `0`s
-    // because the input may be less than 16 bits(in this case, 12 bits)
-    // and expects the answer to respect the number of bits
-    //
-    // This is acheived by shifting `padding`(in this case 4) `1` bytes
-    // to the left and then to the right to insert `0`s in place of `1`s
-    let epsilon = !gamma << padding_left >> padding_left;
+fn part2(values: &[Vec<u32>], filter_fn: fn(u32, u32) -> bool) -> u32 {
+    let width = values[0].len();
 
-    let part1_answer = gamma as u32 * epsilon as u32;
-    dbg!(part1_answer);
+    let mut values = values.to_owned();
 
-    filtered_values
+    for col in 0..width {
+        let column_values: Vec<u32> = values.iter().map(|digits| digits[col]).collect();
+
+        let half = (values.len() + 1) / 2;
+        // Sum is alias for occurences of `1` in the column
+        let sum = column_values.iter().sum::<u32>();
+        // Is `1` if there are more occurences of `1` than `0`
+        let most_common = (sum as usize >= half) as u32;
+
+        values = values
+            .into_iter()
+            .filter(|value| filter_fn(value[col], most_common))
+            .collect();
+
+        if values.len() == 1 {
+            break;
+        }
+    }
+
+    vec_to_int(&values[0])
 }
