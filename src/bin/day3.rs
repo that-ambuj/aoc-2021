@@ -10,7 +10,6 @@ fn main() {
     let size = 16;
 
     let gamma = part1(&values);
-    println!("{:b}", gamma);
 
     let padding = size - width;
     let epsilon = !gamma << padding >> padding;
