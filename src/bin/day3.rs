@@ -22,8 +22,8 @@ fn main() {
     let o2_value = part2(&values, |digit, most_common| digit == most_common);
     let co2_value = part2(&values, |digit, most_common| digit != most_common);
 
-    println!("o2: {:?}, co2: {:?}", o2_value, co2_value);
-    dbg!(o2_value * co2_value);
+    let life_support_rating = o2_value * co2_value;
+    dbg!(life_support_rating);
 }
 
 fn vec_to_int(slice: &[u32]) -> u32 {
