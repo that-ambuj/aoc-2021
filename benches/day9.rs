@@ -1,33 +1,19 @@
-use std::time::Duration;
-
 use aoc_2021::day9::{part1_solution, part2_solution, process_input};
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{black_box, criterion_group, criterion_main, Criterion, SamplingMode};
 
-fn day9_part1_bench(c: &mut Criterion) {
+fn day9_bench(c: &mut Criterion) {
     let input = include_str!("../inputs/day9.txt");
 
     let puzzle = process_input(input);
 
-    c.bench_function("day9 bench part-1", |b| {
-        b.iter(|| part1_solution(black_box(&puzzle)))
-    });
+    let mut group = c.benchmark_group("Day 9");
+    group.sampling_mode(SamplingMode::Flat).sample_size(500);
+
+    group.bench_function("Part 1", |b| b.iter(|| part1_solution(black_box(&puzzle))));
+    group.bench_function("Part 2", |b| b.iter(|| part2_solution(black_box(&puzzle))));
+
+    group.finish();
 }
 
-fn day9_part2_bench(c: &mut Criterion) {
-    let input = include_str!("../inputs/day9.txt");
-
-    let puzzle = process_input(input);
-
-    c.bench_function("day9 bench part-2", |b| {
-        b.iter(|| part2_solution(black_box(&puzzle)))
-    });
-}
-
-criterion_group! {
-    name = benches;
-    // This can be any expression that returns a `Criterion` object.
-    config = Criterion::default().measurement_time(Duration::from_secs(10));
-    targets = day9_part1_bench, day9_part2_bench
-}
-
+criterion_group!(benches, day9_bench);
 criterion_main!(benches);

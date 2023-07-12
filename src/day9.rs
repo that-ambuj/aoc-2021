@@ -69,7 +69,7 @@ pub fn part2_solution(puzzle: &[Vec<u32>]) -> u32 {
     let mut basins = Vec::new();
     let mut counted = HashSet::new();
 
-    for (anchor_x, anchor_y) in anchors.into_iter() {
+    anchors.into_iter().for_each(|(anchor_x, anchor_y)| {
         counted.insert((anchor_x, anchor_y));
 
         let anchor_val = puzzle[anchor_x][anchor_y];
@@ -104,7 +104,7 @@ pub fn part2_solution(puzzle: &[Vec<u32>]) -> u32 {
         }
 
         basins.push(current_basin_size);
-    }
+    });
 
     basins.iter().sorted().rev().take(3).product()
 }
