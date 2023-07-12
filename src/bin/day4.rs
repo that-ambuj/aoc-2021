@@ -58,10 +58,7 @@ fn part2(numbers_to_draw: &[u8], boards: Vec<Board<NotWinning>>) -> u32 {
         last_winning.winning().is_some()
     });
 
-    let part2_score =
-        last_winning.winning().unwrap().calculate_sum() * *winning_number.unwrap() as u32;
-
-    part2_score
+    last_winning.winning().unwrap().calculate_sum() * *winning_number.unwrap() as u32
 }
 
 /// Represents a 5x5 matrix as a list of 5 rows of 5 numbers inside
@@ -97,7 +94,7 @@ impl Board<NotWinning> {
             .next()
             .unwrap()
             .split(',')
-            .map(|num_str| u8::from_str_radix(num_str, 10).unwrap())
+            .map(|num_str| num_str.parse().unwrap())
             .collect();
 
         let boards = processed_input
@@ -176,8 +173,8 @@ fn line_to_row_numbers(line: &str) -> [BoardNumber; 5] {
 
     let numbers = line
         .split_whitespace()
-        .map(|x| u8::from_str_radix(x, 10).unwrap())
-        .map(|num| BoardNumber::new(num))
+        .map(|x| x.parse().unwrap())
+        .map(BoardNumber::new)
         .take(5)
         .collect::<Vec<_>>();
 

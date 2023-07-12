@@ -56,18 +56,6 @@ impl Point {
     pub fn new(x: u32, y: u32) -> Self {
         Point(x, y)
     }
-
-    pub fn x(&self) -> u32 {
-        self.0
-    }
-
-    pub fn y(&self) -> u32 {
-        self.1
-    }
-
-    pub fn split(&self) -> (u32, u32) {
-        (self.0, self.1)
-    }
 }
 
 impl Line {
@@ -82,12 +70,6 @@ impl Line {
 
     pub fn split(&self) -> (Point, Point) {
         (self.0, self.1)
-    }
-
-    pub fn is_straight(&self) -> bool {
-        let (a, b) = self.split();
-
-        a.x() == b.x() || a.y() == b.y()
     }
 
     pub fn points(&self, diagonal: bool) -> Vec<Point> {
@@ -156,7 +138,7 @@ mod tests {
     fn generate_points_of_a_line() {
         let line = Line::new(Point(1, 1), Point(3, 3));
 
-        let points = line.points();
+        let points = line.points(false);
 
         assert_eq!(points.len(), 3);
     }

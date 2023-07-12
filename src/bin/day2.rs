@@ -7,8 +7,8 @@ fn main() {
 
     // Process the given data
     let iter = input.lines().map(|line| {
-        if let Some((instruction, steps)) = line.split_once(" ") {
-            return (instruction, steps);
+        if let Some((instruction, steps)) = line.split_once(' ') {
+            (instruction, steps)
         } else {
             unreachable!("Each line is guaranteed to have an instruction and steps value.")
         }

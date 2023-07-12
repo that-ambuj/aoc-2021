@@ -26,7 +26,7 @@ fn main() {
 }
 
 fn vec_to_int(slice: &[u32]) -> u32 {
-    slice.into_iter().fold(0, |acc, val| (acc << 1) + val)
+    slice.iter().fold(0, |acc, val| (acc << 1) + val)
 }
 
 fn part1(values: &[Vec<u32>]) -> u16 {
@@ -66,10 +66,7 @@ fn part2(values: &[Vec<u32>], filter_fn: fn(u32, u32) -> bool) -> u32 {
         // Is `1` if there are more occurences of `1` than `0`
         let most_common = (sum as usize >= half) as u32;
 
-        values = values
-            .into_iter()
-            .filter(|value| filter_fn(value[col], most_common))
-            .collect();
+        values.retain(|value| filter_fn(value[col], most_common));
 
         if values.len() == 1 {
             break;

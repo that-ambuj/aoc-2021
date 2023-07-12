@@ -11,7 +11,7 @@ fn main() {
         .map(|(x, y, z)| x + y + z)
         .tuple_windows()
         // Compare the sums in pairs and count the number of increments
-        .fold(0 as u32, |inc_count, (before, after)| {
+        .fold(0u32, |inc_count, (before, after)| {
             if after > before {
                 return inc_count + 1;
             }

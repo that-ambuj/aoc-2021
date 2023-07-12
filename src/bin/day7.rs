@@ -46,9 +46,7 @@ fn solution(crab_positions: &[u32], exponential_fuel_cost: bool) -> f32 {
                 })
                 .sum();
 
-            let average = sum as f32 / total_crabs as f32;
-
-            average
+            sum as f32 / total_crabs as f32
         })
         // Take the lowest average fuel cost
         .min_by(|a1, a2| a1.total_cmp(a2))
