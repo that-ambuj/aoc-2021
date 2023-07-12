@@ -22,11 +22,11 @@ fn day8_part2_bench(c: &mut Criterion) {
     });
 }
 
-criterion_group! {
-    name = benches;
-    // This can be any expression that returns a `Criterion` object.
-    config = Criterion::default().sample_size(250);
-    targets = day8_part1_bench, day8_part2_bench
-}
-
+// criterion_group! {
+//     name = benches;
+//     // This can be any expression that returns a `Criterion` object.
+//     config = Criterion::default().sample_size(250);
+//     targets = day8_part1_bench, day8_part2_bench
+// }
+criterion_group!(benches, day8_part1_bench, day8_part2_bench);
 criterion_main!(benches);
