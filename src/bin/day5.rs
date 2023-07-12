@@ -138,7 +138,7 @@ mod tests {
     fn generate_points_of_a_line() {
         let line = Line::new(Point(1, 1), Point(3, 3));
 
-        let points = line.points(false);
+        let points = line.points(true);
 
         assert_eq!(points.len(), 3);
     }
